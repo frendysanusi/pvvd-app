@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/screens/profile_screen.dart';
 import 'package:pvvd_app/screens/welcome_screen.dart';
 
 void main() {
@@ -12,13 +13,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       initialRoute: WelcomeScreen.id,
-      routes: {WelcomeScreen.id: (context) => const WelcomeScreen()},
+      routes: {
+        WelcomeScreen.id: (context) => const WelcomeScreen(),
+        ProfileScreen.id: (context) => const ProfileScreen(),
+      },
+      // initialRoute: WelcomeScreen.id,
+      // routes: {WelcomeScreen.id: (context) => const WelcomeScreen()},
     );
   }
 }

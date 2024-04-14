@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/components.dart';
+import 'package:pvvd_app/screens/profile_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
+import 'package:pvvd_app/screens/profile_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -31,7 +33,9 @@ class WelcomeScreen extends StatelessWidget {
               ),
               CustomButton(
                 buttonText: 'Login',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, ProfileScreen.id);
+                  },
                 width: 321,
                 height: 61,
                 buttonColor: kSecondary,
