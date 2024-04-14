@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/components.dart';
+import 'package:pvvd_app/screens/register_screen.dart';
 import 'package:pvvd_app/utils/app_regex.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
@@ -146,6 +148,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                       ),
+                      const SizedBox(height: 9),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            'Lupa Password?',
+                            style: kBR6.copyWith(
+                              color: kSilverSand,
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 36),
                       ValueListenableBuilder(
                         valueListenable: fieldValidNotifier,
@@ -160,7 +175,32 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {},
                           );
                         },
-                      )
+                      ),
+                      const SizedBox(height: 20),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: kSilverSand,
+                          ),
+                          children: [
+                            const TextSpan(
+                              text: 'Belum memiliki akun? ',
+                            ),
+                            TextSpan(
+                              text: 'Register',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushNamed(
+                                      context, RegisterScreen.id);
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 222),
                     ],
                   ),
                 ),
