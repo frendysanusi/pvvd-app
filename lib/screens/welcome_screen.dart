@@ -9,7 +9,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimary,
+      backgroundColor: kCasal,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () {},
                 width: 321,
                 height: 61,
-                buttonColor: kSecondary,
+                buttonColor: kGreyishTeal,
               ),
               const SizedBox(
                 height: 22,
@@ -44,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () {},
                 width: 321,
                 height: 61,
-                buttonColor: kSecondary,
+                buttonColor: kGreyishTeal,
               ),
               const SizedBox(
                 height: 123,
