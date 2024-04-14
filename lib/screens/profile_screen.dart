@@ -19,8 +19,9 @@ class ProfileScreen extends StatelessWidget{
             'assets/images/logo_pvvd.png',
             width: 40,
             height: 40,
-            fit: BoxFit.fill,
+            fit: BoxFit.contain,
           ),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Column(
