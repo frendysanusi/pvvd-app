@@ -1,5 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/auth.dart';
 import 'package:pvvd_app/components/components.dart';
+import 'package:pvvd_app/screens/register_screen.dart';
+import 'package:pvvd_app/screens/welcome_screen.dart';
 import 'package:pvvd_app/utils/app_regex.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
@@ -45,6 +50,20 @@ class _LoginScreenState extends State<LoginScreen> {
       fieldValidNotifier.value = true;
     } else {
       fieldValidNotifier.value = false;
+    }
+  }
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+      _formKey.currentState?.validate();
     }
   }
 
@@ -146,6 +165,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                       ),
+                      const SizedBox(height: 9),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            'Lupa Password?',
+                            style: kBR6.copyWith(
+                              color: kSilverSand,
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 36),
                       ValueListenableBuilder(
                         valueListenable: fieldValidNotifier,
@@ -157,10 +189,38 @@ class _LoginScreenState extends State<LoginScreen> {
                             buttonColor: kGreyishTeal,
                             textColor: Colors.white,
                             isDisabled: !isValid,
-                            onPressed: () {},
+                            onPressed: () async {
+                              await signInWithEmailAndPassword();
+                              Navigator.pushNamed(context, WelcomeScreen.id);
+                            },
                           );
                         },
-                      )
+                      ),
+                      const SizedBox(height: 20),
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: kSilverSand,
+                          ),
+                          children: [
+                            const TextSpan(
+                              text: 'Belum memiliki akun? ',
+                            ),
+                            TextSpan(
+                              text: 'Register',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushNamed(
+                                      context, RegisterScreen.id);
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 222),
                     ],
                   ),
                 ),
