@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,46 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // get email with phone number
+  Future<void> signInWithPhone() async {
+    try {
+      String phone = '+62${emailController.text.substring(1)}';
+      final Query phoneQuery;
+      phoneQuery = FirebaseFirestore.instance
+          .collection('users')
+          .where('phone', isEqualTo: phone);
+
+      QuerySnapshot notificationSnapshot = await phoneQuery.get();
+      List<QueryDocumentSnapshot> emailDocuments = notificationSnapshot.docs;
+
+      for (QueryDocumentSnapshot document in emailDocuments) {
+        emailController.text =
+            (document.data() as Map<String, dynamic>)['email'];
+      }
+      await signInWithEmailAndPassword();
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+      _formKey.currentState?.validate();
+    }
+  }
+
+  Future<void> signInWithEmailorPhone() async {
+    try {
+      if (AppRegex.emailRegex.hasMatch(emailController.text)) {
+        await signInWithEmailAndPassword();
+      } else {
+        await signInWithPhone();
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+      _formKey.currentState?.validate();
+    }
+  }
+
   @override
   void initState() {
     initializeControllers();
@@ -122,10 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         onChanged: (_) => _formKey.currentState?.validate(),
                         validator: (value) {
                           return errorMessage!.isNotEmpty
-                              ? "E-mail Anda salah"
-                              : AppRegex.emailRegex.hasMatch(value!)
+                              ? "E-mail atau nomor telepon Anda salah"
+                              : AppRegex.emailRegex.hasMatch(value!) ||
+                                      value.length == 11 ||
+                                      value.length == 12
                                   ? null
-                                  : "E-mail Anda invalid";
+                                  : "E-mail atau nomor telepon Anda invalid";
                         },
                       ),
                       const SizedBox(height: 16),
@@ -190,8 +233,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             textColor: Colors.white,
                             isDisabled: !isValid,
                             onPressed: () async {
-                              await signInWithEmailAndPassword();
+                              await signInWithEmailorPhone();
                               Navigator.pushNamed(context, WelcomeScreen.id);
+                              print(
+                                  'login as ${FirebaseAuth.instance.currentUser!.email}');
                             },
                           );
                         },

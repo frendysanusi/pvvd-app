@@ -61,6 +61,90 @@ class CustomButton extends StatelessWidget {
   }
 }
 
+class ForwardButton extends StatelessWidget {
+  const ForwardButton({
+    super.key,
+    required this.pageController,
+    this.isDisabled = false,
+  });
+
+  final bool isDisabled;
+  final PageController pageController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: isDisabled ? kSilverSand.withOpacity(0.12) : kSilverSand,
+        border: Border.all(color: kGreyishTeal),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: IconButton(
+        onPressed: isDisabled
+            ? null
+            : () {
+                pageController.nextPage(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                );
+              },
+        icon: const Icon(
+          Icons.navigate_next,
+        ),
+        padding: EdgeInsets.zero,
+        style: IconButton.styleFrom(
+          minimumSize: const Size.square(16),
+          foregroundColor: kGreyishTeal,
+        ),
+      ),
+    );
+  }
+}
+
+class BeforeButton extends StatelessWidget {
+  const BeforeButton({
+    super.key,
+    required this.pageController,
+    this.isDisabled = false,
+  });
+
+  final bool isDisabled;
+  final PageController pageController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: BoxDecoration(
+        color: isDisabled ? kSilverSand.withOpacity(0.12) : kSilverSand,
+        border: Border.all(color: kGreyishTeal),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: IconButton(
+        onPressed: isDisabled
+            ? null
+            : () {
+                pageController.previousPage(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                );
+              },
+        icon: const Icon(
+          Icons.navigate_before,
+        ),
+        padding: EdgeInsets.zero,
+        style: IconButton.styleFrom(
+          minimumSize: const Size.square(16),
+          foregroundColor: kGreyishTeal,
+        ),
+      ),
+    );
+  }
+}
+
 class AppTextFormField extends StatelessWidget {
   const AppTextFormField({
     super.key,
@@ -293,6 +377,86 @@ class AppPhoneFormField extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class DropdownButtonWidget extends StatefulWidget {
+  const DropdownButtonWidget({
+    super.key,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+    required this.fieldText,
+    this.required,
+  });
+
+  final List<DropdownMenuItem<String>> items;
+  final String value;
+  final void Function(String) onChanged;
+  final String fieldText;
+  final bool? required;
+
+  @override
+  State<DropdownButtonWidget> createState() => _DropdownButtonWidgetState();
+}
+
+class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: TextSpan(
+            text: widget.fieldText,
+            style: kBS5.copyWith(
+              color: kGreyishTeal,
+            ),
+            children: [
+              TextSpan(
+                text: widget.required == true ? ' *' : '',
+                style: kBR5.copyWith(
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        DropdownButtonFormField(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(
+                color: kSilverSand,
+                width: 1.0,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: const BorderSide(
+                color: kGreyishTeal,
+                width: 1.2,
+              ),
+            ),
+          ),
+          style: kBR5.copyWith(
+            color: kWhite,
+          ),
+          dropdownColor: kCasal,
+          value: widget.value,
+          items: widget.items,
+          onChanged: (String? newValue) {
+            setState(() {
+              widget.onChanged(newValue!);
+            });
+          },
+        ),
+      ],
     );
   }
 }
