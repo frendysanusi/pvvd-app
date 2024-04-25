@@ -18,6 +18,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        textTheme: const TextTheme(
+            bodyText1: TextStyle(),
+            bodyText2: TextStyle()
+          ).apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
       ),
       initialRoute: WelcomeScreen.id,
       routes: {

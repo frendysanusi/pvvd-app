@@ -12,32 +12,100 @@ class ProfileScreen extends StatelessWidget{
       backgroundColor: kSecondary,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: 70,
         leading: const BackButton(
           color: Colors.white,
         ),
-        title: Image.asset(
-            'assets/images/logo_pvvd.png',
-            width: 40,
-            height: 40,
-            fit: BoxFit.contain,
+        title: const Text(
+            'Profile',
+            style: TextStyle(color: Colors.white)
+        ),
+        actions: [
+          IconButton(
+            color: Colors.white,
+            onPressed: () {},
+            icon: const Icon(Icons.edit),
           ),
-        centerTitle: true,
+        ]
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(
-            height: 141,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 70,
+                child:
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset(
+                        'assets/images/profile-placeholder.png',
+                        width: 70,
+                        height: 70,
+                      ),
+                      const Center(
+                        child:
+                        SizedBox(
+                          height: 50,
+                          child:
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Nama Lengkap'),
+                              Text('Nomor Telepon'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ),
+
+              const SizedBox(
+                height: 500,
+                child: Padding(
+                  padding: EdgeInsets.only(top:30,),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      crossAxisAlignment:  CrossAxisAlignment.start,
+                      children: [
+                        Text('Tanggal Lahir'),
+                        Text(''),
+                        Divider(),
+                        Text('Golongan Darah'),
+                        Text(''),
+                        Divider(),
+                        Text('Alamat E-mail'),
+                        Text(''),
+                        Divider(),
+                        Text('Alamat Domisili'),
+                        Text(''),
+                        Divider(),
+                        Text('Kabupaten/Kota'),
+                        Text(''),
+                        Divider(),
+                        Text('Provinsi'),
+                        Text(''),
+                        Divider(),
+                        Text('Asal Instansi'),
+                        Text(''),
+                        Divider(),
+                        Text('Bidang/Jurusan'),
+                        Text(''),
+                        Divider(),
+                        Text('Jenjang Pendidikan'),
+                        Text(''),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset(
-              'assets/images/logo_pvvd.png',
-              width: 40,
-              height: 40,
-              fit: BoxFit.contain,
-            ),
-          )],
         ),
       )
     );
