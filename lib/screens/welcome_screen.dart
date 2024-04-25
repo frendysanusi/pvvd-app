@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/components.dart';
-import 'package:pvvd_app/screens/profile_screen.dart';
+import 'package:pvvd_app/screens/login_screen.dart';
+import 'package:pvvd_app/screens/register_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimary,
+      backgroundColor: kCasal,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -33,21 +34,23 @@ class WelcomeScreen extends StatelessWidget {
               CustomButton(
                 buttonText: 'Login',
                 onPressed: () {
-                  Navigator.pushNamed(context, ProfileScreen.id);
-                  },
+                  Navigator.pushNamed(context, LoginScreen.id);
+                },
                 width: 321,
                 height: 61,
-                buttonColor: kSecondary,
+                buttonColor: kGreyishTeal,
               ),
               const SizedBox(
                 height: 22,
               ),
               CustomButton(
                 buttonText: 'Register',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RegisterScreen.id);
+                },
                 width: 321,
                 height: 61,
-                buttonColor: kSecondary,
+                buttonColor: kGreyishTeal,
               ),
               const SizedBox(
                 height: 123,
