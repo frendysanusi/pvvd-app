@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:pvvd_app/screens/register_screen.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/screens/profile_screen.dart';
 import 'package:pvvd_app/screens/login_screen.dart';
 import 'package:pvvd_app/screens/welcome_screen.dart';
 
@@ -26,12 +27,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        textTheme: const TextTheme(
+            bodyText1: TextStyle(),
+            bodyText2: TextStyle()
+          ).apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
       ),
       initialRoute: WelcomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) => const WelcomeScreen(),
         LoginScreen.id: (context) => const LoginScreen(),
         RegisterScreen.id: (context) => const RegisterScreen(),
+        ProfileScreen.id: (context) => const ProfileScreen(),
       },
     );
   }
