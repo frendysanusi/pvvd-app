@@ -460,3 +460,23 @@ class _DropdownButtonWidgetState extends State<DropdownButtonWidget> {
     );
   }
 }
+
+class CustomSnackBar {
+  static void show({required BuildContext context, required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          message,
+          style: kBR6,
+        ),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          textColor: kWhite,
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}

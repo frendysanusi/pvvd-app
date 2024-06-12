@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/components/components.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -12,19 +15,76 @@ class PresenceScreen extends StatefulWidget {
 }
 
 class _PresenceScreenState extends State<PresenceScreen> {
+  String? errorMessage = '';
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   Barcode? result;
 
+  Future<void> addPresence(DateTime date) async {
+    try {
+      final presences = FirebaseFirestore.instance.collection('presences');
+      final services = FirebaseFirestore.instance.collection('services');
+      final userUid = FirebaseAuth.instance.currentUser!.uid;
+      final servicesQuerySnapshot = await services.get();
+      bool dateMatches = false;
+      String? servicesId;
+      for (var doc in servicesQuerySnapshot.docs) {
+        final serviceDate = (doc['date'] as Timestamp).toDate();
+        if (date.day == serviceDate.day &&
+            date.month == serviceDate.month &&
+            date.year == serviceDate.year) {
+          dateMatches = true;
+          servicesId = doc.id;
+          break;
+        }
+      }
+
+      if (dateMatches) {
+        final docRef = presences.doc(userUid);
+        final docSnapshot = await docRef.get();
+
+        if (docSnapshot.exists) {
+          CustomSnackBar.show(
+              context: context,
+              message: 'Anda sudah melakukan presensi hari ini.');
+          controller!.resumeCamera();
+        } else {
+          docRef.set({
+            'id_user': userUid,
+            'services_id': servicesId,
+            'date': Timestamp.fromDate(date),
+          });
+          _presenceDetail(context);
+        }
+      } else {
+        CustomSnackBar.show(
+            context: context,
+            message:
+                'Hari ini tidak ada kebaktian ya. Sampai jumpa minggu depan!');
+        controller!.resumeCamera();
+      }
+    } on FirebaseException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
   void _onQRViewCreated(BuildContext context, QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       setState(() {
         result = scanData;
       });
       if (result != null && result!.code == 'Kebaktian Pemuda') {
         controller.pauseCamera();
-        _presenceDetail(context, result!.code);
+        try {
+          await addPresence(DateTime.now());
+        } catch (e) {
+          setState(() {
+            errorMessage = 'Error: $e';
+          });
+        }
       }
     });
   }
@@ -40,7 +100,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
     );
   }
 
-  void _presenceDetail(BuildContext context, String? qrcode) {
+  void _presenceDetail(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     DateTime now = DateTime.now();
@@ -92,7 +152,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '$qrcode',
+                          'KEBAKTIAN PEMUDA',
                           style: kBS5.copyWith(
                             color: kBlack,
                             fontWeight: FontWeight.bold,

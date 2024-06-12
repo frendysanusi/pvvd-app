@@ -235,8 +235,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               await signInWithEmailorPhone();
                               Navigator.pushNamed(context, PresenceScreen.id);
-                              print(
-                                  'login as ${FirebaseAuth.instance.currentUser!.email}');
                             },
                           );
                         },
