@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/auth.dart';
 import 'package:pvvd_app/components/components.dart';
+import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/screens/register_screen.dart';
-import 'package:pvvd_app/screens/welcome_screen.dart';
 import 'package:pvvd_app/utils/app_regex.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   passwordObscure
                                       ? Icons.visibility_off_outlined
                                       : Icons.visibility_outlined,
-                                  color: Colors.black,
+                                  color: kBlack,
                                 ),
                               ),
                             ),
@@ -234,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             isDisabled: !isValid,
                             onPressed: () async {
                               await signInWithEmailorPhone();
-                              Navigator.pushNamed(context, WelcomeScreen.id);
+                              Navigator.pushNamed(context, PresenceScreen.id);
                               print(
                                   'login as ${FirebaseAuth.instance.currentUser!.email}');
                             },

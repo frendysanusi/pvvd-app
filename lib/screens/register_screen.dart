@@ -504,7 +504,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       passwordObscure
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: Colors.black,
+                      color: kBlack,
                     ),
                   ),
                 ),
@@ -542,7 +542,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       confirmPasswordObscure
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: Colors.black,
+                      color: kBlack,
                     ),
                   ),
                 ),
