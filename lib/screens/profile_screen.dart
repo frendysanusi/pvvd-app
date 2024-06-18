@@ -121,9 +121,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
 
                 Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white, // Background color
-                    borderRadius: BorderRadius.circular(25), // Rounded corners radius
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)), // Rounded corners radius
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -165,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.7,
+          heightFactor: 0.65,
           child: Container(
             height: MediaQuery.of(context).size.height*0.8, // Adjust the height as needed
             decoration: const BoxDecoration(
