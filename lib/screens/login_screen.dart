@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/auth.dart';
 import 'package:pvvd_app/components/components.dart';
-import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/screens/register_screen.dart';
+import 'package:pvvd_app/screens/user_presence_data_screen.dart';
 import 'package:pvvd_app/utils/app_regex.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
@@ -234,7 +234,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             isDisabled: !isValid,
                             onPressed: () async {
                               await signInWithEmailorPhone();
-                              Navigator.pushNamed(context, PresenceScreen.id);
+                              Navigator.pushNamed(
+                                  context, UserPresenceDataScreen.id);
                             },
                           );
                         },
