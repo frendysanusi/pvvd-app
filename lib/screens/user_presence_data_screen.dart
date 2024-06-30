@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/table.dart';
 import 'package:pvvd_app/utils/constants.dart';
+import 'package:pvvd_app/utils/services.dart';
 
 class UserPresenceDataScreen extends StatefulWidget {
   const UserPresenceDataScreen({super.key});
@@ -12,18 +13,32 @@ class UserPresenceDataScreen extends StatefulWidget {
 
 class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
   late int currMonth;
+  List<Services>? services;
 
   @override
   void initState() {
     super.initState();
     DateTime now = DateTime.now();
     currMonth = now.month;
+    fetchServices();
+  }
+
+  Future<void> fetchServices() async {
+    await Services.getServices();
+    setState(() {
+      services = Services.instances;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    if (services != null && services!.isNotEmpty) {
+      for (var service in services!) {
+        print(service);
+      }
+    }
     return Scaffold(
       appBar: AppBar(
           backgroundColor: kShadedSpruce,
