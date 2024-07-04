@@ -11,7 +11,6 @@ class Services {
     _serviceInstances ??= [];
     Services newService =
         Services._(serviceId, date, leader, speaker, topic, translator);
-    _serviceInstances!.add(newService);
     return newService;
   }
 
