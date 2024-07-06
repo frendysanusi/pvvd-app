@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/components/buttons.dart';
 import 'package:pvvd_app/utils/constants.dart';
+import 'package:pvvd_app/utils/presences.dart';
 import 'package:pvvd_app/utils/services.dart';
 
 class UserPresenceDataScreen extends StatefulWidget {
@@ -13,6 +16,7 @@ class UserPresenceDataScreen extends StatefulWidget {
 class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
   late int currMonth;
   List<Services>? services;
+  List<Presences>? presences;
 
   @override
   void initState() {
@@ -20,12 +24,21 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
     DateTime now = DateTime.now();
     currMonth = now.month;
     fetchServices();
+    fetchPresences();
   }
 
   Future<void> fetchServices() async {
     await Services.getServices();
     setState(() {
       services = Services.instances;
+    });
+  }
+
+  Future<void> fetchPresences() async {
+    await Presences.getPresencesByUserId(
+        FirebaseAuth.instance.currentUser!.uid);
+    setState(() {
+      presences = Presences.instances;
     });
   }
 
@@ -49,7 +62,7 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
           child: PaginatedDataTable(
             onRowsPerPageChanged: (perPage) {},
             availableRowsPerPage: const [5, 10, 15],
-            rowsPerPage: 10,
+            rowsPerPage: services!.length >= 10 ? 10 : services!.length,
             showEmptyRows: false,
             columns: const <DataColumn>[
               DataColumn(
@@ -62,8 +75,9 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
                 label: Text('Kehadiran'),
               ),
             ],
-            source: ServicesDataSource(services!, screenWidth, screenHeight),
-            columnSpacing: 40,
+            source: ServicesDataSource(
+                services!, presences!, screenWidth, screenHeight),
+            columnSpacing: 30,
           ),
         ),
         Positioned(
@@ -151,6 +165,7 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
               ),
               SizedBox(height: screenHeight * 0.015),
               generateServiceTable(screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.18),
             ],
           ),
         ),
@@ -161,11 +176,13 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
 
 class ServicesDataSource extends DataTableSource {
   final List<Services> services;
+  final List<Presences> presences;
   final double screenWidth;
   final double screenHeight;
 
   ServicesDataSource(
     this.services,
+    this.presences,
     this.screenWidth,
     this.screenHeight,
   );
@@ -177,6 +194,13 @@ class ServicesDataSource extends DataTableSource {
       return null;
     }
     final service = services[index];
+    String status = 'Tidak Hadir';
+    for (Presences presence in presences) {
+      if (presence.serviceId == service.serviceId) {
+        status = 'Hadir';
+        break;
+      }
+    }
     return DataRow.byIndex(
       index: index,
       cells: [
@@ -191,8 +215,26 @@ class ServicesDataSource extends DataTableSource {
             ),
           ),
         )),
-        DataCell(Text("Cell $index")),
-        DataCell(Text("Cell $index")),
+        DataCell(
+          Container(
+            alignment: Alignment.center,
+            child: DetailButton(
+              onPressed: () {},
+              width: 0.2 * screenWidth,
+              height: 0.03 * screenHeight,
+            ),
+          ),
+        ),
+        DataCell(
+          Container(
+            alignment: Alignment.center,
+            child: PresenceButton(
+              buttonText: status,
+              width: 0.2 * screenWidth,
+              height: 0.03 * screenHeight,
+            ),
+          ),
+        ),
       ],
     );
   }

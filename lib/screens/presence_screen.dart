@@ -50,8 +50,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           controller!.resumeCamera();
         } else {
           docRef.set({
-            'id_user': userUid,
-            'services_id': servicesId,
+            'user_id': userUid,
+            'service_id': servicesId,
             'date': Timestamp.fromDate(date),
           });
           _presenceDetail(context);
