@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/components.dart';
+import 'package:pvvd_app/components/navbar.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -232,6 +233,9 @@ class _PresenceScreenState extends State<PresenceScreen> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: const Navbar(
+        currentIndex: 1,
       ),
     );
   }

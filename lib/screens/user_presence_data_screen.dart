@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pvvd_app/components/detail_service.dart';
+import 'package:pvvd_app/components/navbar.dart';
 import 'package:pvvd_app/components/presence_button.dart';
 import 'package:pvvd_app/components/detail_button.dart';
 import 'package:pvvd_app/utils/constants.dart';
@@ -17,6 +19,7 @@ class UserPresenceDataScreen extends StatefulWidget {
 
 class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
   late int currMonth;
+  late int currYear;
   List<Services>? services;
   List<Presences>? presences;
 
@@ -25,12 +28,13 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
     super.initState();
     DateTime now = DateTime.now();
     currMonth = now.month;
-    fetchServices();
+    currYear = now.year;
+    fetchServices(currMonth, currYear);
     fetchPresences();
   }
 
-  Future<void> fetchServices() async {
-    await Services.getServices();
+  Future<void> fetchServices(int currMonth, int currYear) async {
+    await Services.getServices(currMonth, currYear);
     setState(() {
       services = Services.instances;
     });
@@ -46,54 +50,58 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
 
   Widget generateServiceTable(double screenWidth, double screenHeight) {
     if (services == null || services!.isEmpty) {
-      return const Text('Tidak ada data');
-    }
-    return Stack(
-      children: [
-        DataTableTheme(
-          data: DataTableThemeData(
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => kShadedSpruce),
-            headingTextStyle: kBR7.copyWith(color: kBlack),
-            dataRowColor:
-                MaterialStateColor.resolveWith((states) => kGreyishTeal),
-            dataTextStyle: kBS6.copyWith(
-              color: kBlack,
+      return SizedBox(
+        height: screenHeight * 0.4,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(
+              'Tidak ada data',
+              style: kBM5.copyWith(color: kBlack),
             ),
-          ),
-          child: PaginatedDataTable(
-            onRowsPerPageChanged: (perPage) {},
-            availableRowsPerPage:
-                services!.length >= 10 ? const [5, 10, 15] : [services!.length],
-            rowsPerPage: services!.length >= 10 ? 10 : services!.length,
-            showEmptyRows: false,
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text('Tanggal Kebaktian'),
+            Positioned(
+              child: Image.asset(
+                'assets/images/logo-pvvd-transparent-15%.png',
+                width: screenWidth * 0.5964,
+                height: screenHeight * 0.2892,
+                fit: BoxFit.contain,
               ),
-              DataColumn(
-                label: Text('Detail'),
-              ),
-              DataColumn(
-                label: Text('Kehadiran'),
-              ),
-            ],
-            source: ServicesDataSource(
-                services!, presences!, screenWidth, screenHeight, context),
-            columnSpacing: 15,
-          ),
+            ),
+          ],
         ),
-        // Positioned(
-        //   top: screenHeight * 0.5 - (screenHeight * 0.2892 / 2),
-        //   left: screenWidth * 0.45 - (screenWidth * 0.5964 / 2),
-        //   child: Image.asset(
-        //     'assets/images/logo-pvvd-transparent-15%.png',
-        //     width: screenWidth * 0.5964,
-        //     height: screenHeight * 0.2892,
-        //     fit: BoxFit.contain,
-        //   ),
-        // ),
-      ],
+      );
+    }
+    return DataTableTheme(
+      data: DataTableThemeData(
+        headingRowColor:
+            MaterialStateColor.resolveWith((states) => kShadedSpruce),
+        headingTextStyle: kBR7.copyWith(color: kBlack),
+        dataRowColor: MaterialStateColor.resolveWith((states) => kGreyishTeal),
+        dataTextStyle: kBS6.copyWith(
+          color: kBlack,
+        ),
+      ),
+      child: PaginatedDataTable(
+        onRowsPerPageChanged: (perPage) {},
+        availableRowsPerPage:
+            services!.length >= 10 ? const [5, 10, 15] : [services!.length],
+        rowsPerPage: services!.length >= 10 ? 10 : services!.length,
+        showEmptyRows: false,
+        columns: const <DataColumn>[
+          DataColumn(
+            label: Text('Tanggal Kebaktian'),
+          ),
+          DataColumn(
+            label: Text('Detail'),
+          ),
+          DataColumn(
+            label: Text('Kehadiran'),
+          ),
+        ],
+        source: ServicesDataSource(
+            services!, presences!, screenWidth, screenHeight, context),
+        columnSpacing: 15,
+      ),
     );
   }
 
@@ -155,6 +163,7 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
                       onChanged: (value) {
                         setState(() {
                           currMonth = value!;
+                          fetchServices(currMonth, currYear);
                         });
                       },
                     ),
@@ -167,11 +176,57 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
                 ],
               ),
               SizedBox(height: screenHeight * 0.015),
+              Row(
+                children: [
+                  Text(
+                    'Tahun',
+                    style: kBR5.copyWith(color: kGunmetal),
+                  ),
+                  SizedBox(width: screenWidth * 0.02),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.01),
+                    height: screenHeight * 0.06,
+                    width: screenWidth * 0.23,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFF636363)),
+                    ),
+                    child: DropdownButton<int>(
+                      isExpanded: true,
+                      style: kBR4.copyWith(color: kCasal),
+                      value: currYear,
+                      items: List.generate(5, (index) {
+                        int year = currYear - 2 + index;
+                        return DropdownMenuItem(
+                          value: year,
+                          child: Text('$year'),
+                        );
+                      }),
+                      onChanged: (value) {
+                        setState(() {
+                          currYear = value!;
+                          fetchServices(currMonth, currYear);
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: screenWidth * 0.02),
+                  Text(
+                    '/  ${currYear + 2}',
+                    style: kBR5.copyWith(color: kGunmetal),
+                  ),
+                ],
+              ),
+              SizedBox(height: screenHeight * 0.015),
               generateServiceTable(screenWidth, screenHeight),
               SizedBox(height: screenHeight * 0.18),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: const Navbar(
+        currentIndex: 2,
       ),
     );
   }
@@ -214,7 +269,7 @@ class ServicesDataSource extends DataTableSource {
           padding: EdgeInsets.symmetric(
               horizontal: screenWidth * 0.03, vertical: screenHeight * 0.01),
           child: Text(
-            service.date.toString().substring(0, 10),
+            DateFormat.yMMMMd('id').format(service.date),
             style: kBR7.copyWith(
               color: kBlack,
             ),

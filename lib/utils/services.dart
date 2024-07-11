@@ -21,7 +21,7 @@ class Services {
   final String topic;
   final String translator;
 
-  static Future<void> getServices() async {
+  static Future<void> getServices(int month, int year) async {
     _serviceInstances = [];
 
     final CollectionReference serviceQuery =
@@ -31,14 +31,18 @@ class Services {
 
     for (QueryDocumentSnapshot serviceDocument in serviceDocuments) {
       final data = serviceDocument.data() as Map<String, dynamic>;
-      _serviceInstances!.add(Services(
-        serviceDocument.id,
-        (data['date'] as Timestamp).toDate(),
-        data['leader'] as String,
-        data['speaker'] as String,
-        data['topic'] as String,
-        data['translator'] as String,
-      ));
+      DateTime serviceDate = (data['date'] as Timestamp).toDate();
+
+      if (serviceDate.month == month && serviceDate.year == year) {
+        _serviceInstances!.add(Services(
+          serviceDocument.id,
+          serviceDate,
+          data['leader'] as String,
+          data['speaker'] as String,
+          data['topic'] as String,
+          data['translator'] as String,
+        ));
+      }
     }
   }
 
