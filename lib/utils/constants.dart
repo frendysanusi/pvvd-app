@@ -101,9 +101,6 @@ TextStyle kBS6 = kBodySemiBold.copyWith(
 TextStyle kBS7 = kBodySemiBold.copyWith(
   fontSize: 10,
 );
-TextStyle kBS8 = kBodySemiBold.copyWith(
-  fontSize: 10,
-);
 
 // Body Bold
 TextStyle kBB1 = kBodyBold.copyWith(

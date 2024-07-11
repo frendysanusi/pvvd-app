@@ -130,7 +130,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
               ),
               SizedBox(height: screenHeight * 0.0005),
               Text(
-                'Hari, tanggal: ${DateFormat('EEEE', 'id').format(now)}, ${DateFormat.yMd('id').format(now)}',
+                'Hari, tanggal: ${DateFormat('EEEE', 'id').format(now)}, ${DateFormat.yMMMMd('id').format(now)}',
                 style: kBR5.copyWith(
                   color: kBlack,
                 ),

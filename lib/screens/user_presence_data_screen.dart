@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pvvd_app/components/buttons.dart';
+import 'package:pvvd_app/components/detail_service.dart';
+import 'package:pvvd_app/components/presence_button.dart';
+import 'package:pvvd_app/components/detail_button.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:pvvd_app/utils/presences.dart';
 import 'package:pvvd_app/utils/services.dart';
@@ -61,7 +63,8 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
           ),
           child: PaginatedDataTable(
             onRowsPerPageChanged: (perPage) {},
-            availableRowsPerPage: const [5, 10, 15],
+            availableRowsPerPage:
+                services!.length >= 10 ? const [5, 10, 15] : [services!.length],
             rowsPerPage: services!.length >= 10 ? 10 : services!.length,
             showEmptyRows: false,
             columns: const <DataColumn>[
@@ -76,20 +79,20 @@ class _UserPresenceDataScreenState extends State<UserPresenceDataScreen> {
               ),
             ],
             source: ServicesDataSource(
-                services!, presences!, screenWidth, screenHeight),
-            columnSpacing: 30,
+                services!, presences!, screenWidth, screenHeight, context),
+            columnSpacing: 15,
           ),
         ),
-        Positioned(
-          top: screenHeight * 0.5 - (screenHeight * 0.2892 / 2),
-          left: screenWidth * 0.45 - (screenWidth * 0.5964 / 2),
-          child: Image.asset(
-            'assets/images/logo-pvvd-transparent-15%.png',
-            width: screenWidth * 0.5964,
-            height: screenHeight * 0.2892,
-            fit: BoxFit.contain,
-          ),
-        ),
+        // Positioned(
+        //   top: screenHeight * 0.5 - (screenHeight * 0.2892 / 2),
+        //   left: screenWidth * 0.45 - (screenWidth * 0.5964 / 2),
+        //   child: Image.asset(
+        //     'assets/images/logo-pvvd-transparent-15%.png',
+        //     width: screenWidth * 0.5964,
+        //     height: screenHeight * 0.2892,
+        //     fit: BoxFit.contain,
+        //   ),
+        // ),
       ],
     );
   }
@@ -179,12 +182,14 @@ class ServicesDataSource extends DataTableSource {
   final List<Presences> presences;
   final double screenWidth;
   final double screenHeight;
+  final BuildContext context;
 
   ServicesDataSource(
     this.services,
     this.presences,
     this.screenWidth,
     this.screenHeight,
+    this.context,
   );
 
   @override
@@ -219,9 +224,15 @@ class ServicesDataSource extends DataTableSource {
           Container(
             alignment: Alignment.center,
             child: DetailButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      buildDetailService(context, service),
+                );
+              },
               width: 0.2 * screenWidth,
-              height: 0.03 * screenHeight,
+              height: 0.05 * screenHeight,
             ),
           ),
         ),
@@ -231,7 +242,7 @@ class ServicesDataSource extends DataTableSource {
             child: PresenceButton(
               buttonText: status,
               width: 0.2 * screenWidth,
-              height: 0.03 * screenHeight,
+              height: 0.05 * screenHeight,
             ),
           ),
         ),

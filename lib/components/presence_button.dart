@@ -34,7 +34,7 @@ class PresenceButton extends StatelessWidget {
         child: Center(
           child: Text(
             buttonText,
-            style: kBS8.copyWith(
+            style: kBS7.copyWith(
               color: isPresence
                   ? const Color(0xFF3A5A40)
                   : const Color(0xFF9C162E),
@@ -43,46 +43,5 @@ class PresenceButton extends StatelessWidget {
         ),
       ),
     ));
-  }
-}
-
-class DetailButton extends StatelessWidget {
-  const DetailButton({
-    super.key,
-    required this.onPressed,
-    required this.width,
-    required this.height,
-  });
-
-  final Function onPressed;
-  final double width;
-  final double height;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          onPressed();
-        },
-        child: Material(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              border: Border.all(color: kGunmetal),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Text(
-                'Detail',
-                style: kBS8.copyWith(
-                  color: kGunmetal,
-                ),
-              ),
-            ),
-          ),
-        ));
   }
 }
