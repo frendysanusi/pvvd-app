@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/components.dart';
+import 'package:pvvd_app/components/navbar.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -50,8 +51,8 @@ class _PresenceScreenState extends State<PresenceScreen> {
           controller!.resumeCamera();
         } else {
           docRef.set({
-            'id_user': userUid,
-            'services_id': servicesId,
+            'user_id': userUid,
+            'service_id': servicesId,
             'date': Timestamp.fromDate(date),
           });
           _presenceDetail(context);
@@ -130,7 +131,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
               ),
               SizedBox(height: screenHeight * 0.0005),
               Text(
-                'Hari, tanggal: ${DateFormat('EEEE', 'id').format(now)}, ${DateFormat.yMd('id').format(now)}',
+                'Hari, tanggal: ${DateFormat('EEEE', 'id').format(now)}, ${DateFormat.yMMMMd('id').format(now)}',
                 style: kBR5.copyWith(
                   color: kBlack,
                 ),
@@ -232,6 +233,9 @@ class _PresenceScreenState extends State<PresenceScreen> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: const Navbar(
+        currentIndex: 1,
       ),
     );
   }
