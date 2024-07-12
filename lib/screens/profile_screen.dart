@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -244,3 +244,38 @@ Widget buildProfileEditRow({required String title, required TextEditingControlle
     ],
   );
 }
+
+
+// Widget buildProfileEditRow({required String title, required TextEditingController controller}) {
+//   return Column(
+//     children: [
+//       Padding(
+//         padding: const EdgeInsets.only(bottom: 12),
+//         child: EditableText(
+//           controller: controller,
+//           focusNode: FocusNode(),
+//           style: const TextStyle(
+//             color: Colors.black,
+//             fontSize: 16.0,
+//           ),
+//           decoration: InputDecoration(
+// //               labelText: title,
+// //               hintText: "data",
+// //               hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+// //           ),
+//           cursorColor: Colors.blue,
+//           backgroundCursorColor: Colors.grey,
+//           keyboardType: TextInputType.text,
+//           inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
+//           onChanged: (value) {
+//             print('Text changed: $value');
+//           },
+//           onSubmitted: (value) {
+//             print('Text submitted: $value');
+//           },
+//         ),
+//       ),
+//       Text(title, style: const TextStyle(fontWeight: FontWeight.normal)),
+//     ],
+//   );
+// }
