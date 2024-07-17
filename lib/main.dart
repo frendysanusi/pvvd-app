@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pvvd_app/screens/landing_screen.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/screens/register_screen.dart';
 import 'firebase_options.dart';
@@ -38,11 +39,12 @@ class MyApp extends StatelessWidget {
           displayColor: Colors.white,
         ),
       ),
-      initialRoute: ProfileScreen.id,
+      initialRoute: LandingScreen.id,
       routes: {
         WelcomeScreen.id: (context) => const WelcomeScreen(),
         LoginScreen.id: (context) => const LoginScreen(),
         RegisterScreen.id: (context) => const RegisterScreen(),
+        LandingScreen.id: (context) => const LandingScreen(),
         ProfileScreen.id: (context) => const ProfileScreen(),
         PresenceScreen.id: (context) => const PresenceScreen(),
       },
