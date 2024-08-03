@@ -21,6 +21,12 @@ class _PresenceScreenState extends State<PresenceScreen> {
   QRViewController? controller;
   Barcode? result;
 
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
   Future<void> addPresence(DateTime date) async {
     try {
       final presences = FirebaseFirestore.instance.collection('presences');
@@ -33,7 +39,9 @@ class _PresenceScreenState extends State<PresenceScreen> {
         final serviceDate = (doc['date'] as Timestamp).toDate();
         if (date.day == serviceDate.day &&
             date.month == serviceDate.month &&
-            date.year == serviceDate.year) {
+            date.year == serviceDate.year &&
+            date.hour >= serviceDate.hour &&
+            date.hour <= serviceDate.hour + 2) {
           dateMatches = true;
           servicesId = doc.id;
           break;

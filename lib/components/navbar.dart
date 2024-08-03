@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/screens/landing_screen.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/screens/profile_screen.dart';
 import 'package:pvvd_app/screens/user_presence_data_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
 final List<String> _pages = <String>[
-  '',
+  LandingScreen.id,
   PresenceScreen.id,
   UserPresenceDataScreen.id,
   ProfileScreen.id,

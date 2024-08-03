@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/auth.dart';
 import 'package:pvvd_app/components/components.dart';
-import 'package:pvvd_app/screens/welcome_screen.dart';
+import 'package:pvvd_app/screens/landing_screen.dart';
 import 'package:pvvd_app/utils/app_regex.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
@@ -244,6 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'subdistrict': subdistrict,
         'district': district,
         'province': province,
+        'role': 'Umat',
       });
     } on FirebaseException catch (e) {
       setState(() {
@@ -436,7 +437,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     isDisabled: !isValid,
                     onPressed: () async {
                       await createUserWithEmailAndPassword();
-                      Navigator.pushNamed(context, WelcomeScreen.id);
+                      Navigator.pushNamed(context, LandingScreen.id);
                     },
                   );
                 },

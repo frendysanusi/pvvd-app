@@ -1,12 +1,32 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pvvd_app/components/navbar.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
+import 'package:pvvd_app/utils/profile.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
-
   static String id = 'landing_screen';
+
+  @override
+  State<LandingScreen> createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> {
+  late Profile profile;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfile();
+  }
+
+  Future<void> fetchProfile() async {
+    await Profile.getProfile();
+    setState(() {
+      profile = Profile.instance!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,67 +42,70 @@ class LandingScreen extends StatelessWidget {
         title: const Text('Profile', style: TextStyle(color: Colors.white)),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
-              child: SizedBox(
-                height: 120,
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'assets/images/profile-placeholder.png',
-                      width: 80,
-                      height: 80,
-                    ),
-                    Center(
-                      child: SizedBox(
-                        height: 120,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Text('Hi, Nama',
-                                style:
-                                    TextStyle(fontSize: 26, fontWeight: bold)),
-                            const Padding(
-                              padding:
-                                  EdgeInsets.only(top: 4, bottom: 8, right: 32),
-                              child: Text('Nomor Telepon'),
-                            ),
-                            SizedBox(
-                              height: 36,
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                    backgroundColor: kGreyishTeal),
-                                onPressed: null,
-                                child: const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Role",
-                                      style: TextStyle(color: Colors.white),
-                                    )
-                                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+                child: SizedBox(
+                  height: 120,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        'assets/images/profile-placeholder.png',
+                        width: 80,
+                        height: 80,
+                      ),
+                      Center(
+                        child: SizedBox(
+                          height: 120,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Hi, ${profile.firstname}',
+                                  style: const TextStyle(
+                                      fontSize: 26, fontWeight: bold)),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 4, bottom: 8, right: 32),
+                                child: Text(profile.phone),
+                              ),
+                              SizedBox(
+                                height: 36,
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: kGreyishTeal),
+                                  onPressed: null,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        profile.role,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  child: SingleChildScrollView(
+              Column(
+                children: [
+                  SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
@@ -107,8 +130,7 @@ class LandingScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-                Padding(
+                  Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 24, horizontal: 18),
                     child: Column(
@@ -116,51 +138,51 @@ class LandingScreen extends StatelessWidget {
                       children: [
                         const Text("Announcement"),
                         const Divider(),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height - 534,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Builder(
-                                  builder: (context) => announcementCard(
-                                    context,
-                                    title: "Jadwal Kebaktian",
-                                    desc: "Hari Minggu, Jam 8 Pagi",
-                                  ),
-                                ),
-                                Builder(
-                                  builder: (context) => announcementCard(
-                                    context,
-                                    title: "Donasi Anak Asuh",
-                                    desc:
-                                        "Donasi anak asuh dapat dilakukan dengan menghubungi maling",
-                                  ),
-                                ),
-                                Builder(
-                                  builder: (context) => announcementCard(
-                                    context,
-                                    title: "Grup LINE PVVD Sports",
-                                    desc:
-                                        "PVVD mengadakan olahraga tiap hari sampai mati",
-                                  ),
-                                ),
-                                Builder(
-                                  builder: (context) => announcementCard(
-                                    context,
-                                    title: "Malam Keakraban",
-                                    desc: "Paginya ga akrab",
-                                  ),
-                                ),
-                              ],
+                        Column(
+                          children: [
+                            Builder(
+                              builder: (context) => announcementCard(
+                                context,
+                                title: "Jadwal Kebaktian",
+                                desc: "Hari Minggu, Jam 8 Pagi",
+                              ),
                             ),
-                          ),
+                            Builder(
+                              builder: (context) => announcementCard(
+                                context,
+                                title: "Donasi Anak Asuh",
+                                desc:
+                                    "Donasi anak asuh dapat dilakukan dengan menghubungi maling",
+                              ),
+                            ),
+                            Builder(
+                              builder: (context) => announcementCard(
+                                context,
+                                title: "Grup LINE PVVD Sports",
+                                desc:
+                                    "PVVD mengadakan olahraga tiap hari sampai mati",
+                              ),
+                            ),
+                            Builder(
+                              builder: (context) => announcementCard(
+                                context,
+                                title: "Malam Keakraban",
+                                desc: "Paginya ga akrab",
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    )),
-              ],
-            ),
-          ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: const Navbar(
+        currentIndex: 0,
       ),
     );
   }

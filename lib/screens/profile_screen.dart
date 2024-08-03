@@ -163,6 +163,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: const Navbar(
+        currentIndex: 3,
+      ),
     );
   }
 
