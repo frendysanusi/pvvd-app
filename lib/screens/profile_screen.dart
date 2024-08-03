@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pvvd_app/components/navbar.dart';
 import 'package:pvvd_app/utils/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -72,10 +73,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
                   child: SizedBox(
                     height: 120,
-                    width: MediaQuery.of(context).size.width*0.7,
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,21 +94,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                const Text('Hi, Nama', style: TextStyle(fontSize: 26, fontWeight: bold)),
+                                const Text('Hi, Nama',
+                                    style: TextStyle(
+                                        fontSize: 26, fontWeight: bold)),
                                 const Padding(
-                                  padding:EdgeInsets.only(top: 4, bottom: 8, right: 32),
+                                  padding: EdgeInsets.only(
+                                      top: 4, bottom: 8, right: 32),
                                   child: Text('Nomor Telepon'),
                                 ),
                                 SizedBox(
                                   height: 36,
                                   child: TextButton(
-                                    style: TextButton.styleFrom(backgroundColor: kGreyishTeal),
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: kGreyishTeal),
                                     onPressed: null,
                                     child: const Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Text("Role", style: TextStyle(color: Colors.white),)
+                                        Text(
+                                          "Role",
+                                          style: TextStyle(color: Colors.white),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -119,16 +130,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-
                 Container(
                   decoration: const BoxDecoration(
                     color: Colors.white, // Background color
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)), // Rounded corners radius
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight:
+                            Radius.circular(25)), // Rounded corners radius
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 32
-                    ),
+                        vertical: 12, horizontal: 32),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -167,7 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return FractionallySizedBox(
           heightFactor: 0.65,
           child: Container(
-            height: MediaQuery.of(context).size.height*0.8, // Adjust the height as needed
+            height: MediaQuery.of(context).size.height *
+                0.8, // Adjust the height as needed
             decoration: const BoxDecoration(
               color: kGreyishTeal,
               borderRadius: BorderRadius.vertical(
@@ -182,23 +195,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 backgroundColor: Colors.white,
                 resizeToAvoidBottomInset: true,
                 body: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                   child: SafeArea(
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          buildProfileEditRow(title: 'Nomor Telepon', controller: _phoneController), //Perlu ada tahap verifikasi
-                          buildProfileEditRow(title: 'Nama Lengkap', controller: _nameController),
-                          buildProfileEditRow(title: 'Tanggal Lahir', controller: _birthdayController),
-                          buildProfileEditRow(title: 'Golongan Darah', controller: _bloodController),
-                          buildProfileEditRow(title: 'Alamat E-mail', controller: _emailController),
-                          buildProfileEditRow(title: 'Alamat Domisili', controller: _domicileController),
-                          buildProfileEditRow(title: 'Kabupaten/Kota', controller: _cityController),
-                          buildProfileEditRow(title: 'Provinsi', controller: _provinceController),
-                          buildProfileEditRow(title: 'Asal Instansi', controller: _instanceController),
-                          buildProfileEditRow(title: 'Bidang/Jurusan', controller: _fieldController),
-                          buildProfileEditRow(title: 'Jenjang Pendidikan', controller: _educationController),
+                          buildProfileEditRow(
+                              title: 'Nomor Telepon',
+                              controller:
+                                  _phoneController), //Perlu ada tahap verifikasi
+                          buildProfileEditRow(
+                              title: 'Nama Lengkap',
+                              controller: _nameController),
+                          buildProfileEditRow(
+                              title: 'Tanggal Lahir',
+                              controller: _birthdayController),
+                          buildProfileEditRow(
+                              title: 'Golongan Darah',
+                              controller: _bloodController),
+                          buildProfileEditRow(
+                              title: 'Alamat E-mail',
+                              controller: _emailController),
+                          buildProfileEditRow(
+                              title: 'Alamat Domisili',
+                              controller: _domicileController),
+                          buildProfileEditRow(
+                              title: 'Kabupaten/Kota',
+                              controller: _cityController),
+                          buildProfileEditRow(
+                              title: 'Provinsi',
+                              controller: _provinceController),
+                          buildProfileEditRow(
+                              title: 'Asal Instansi',
+                              controller: _instanceController),
+                          buildProfileEditRow(
+                              title: 'Bidang/Jurusan',
+                              controller: _fieldController),
+                          buildProfileEditRow(
+                              title: 'Jenjang Pendidikan',
+                              controller: _educationController),
                         ],
                       ),
                     ),
@@ -219,7 +256,10 @@ Widget buildProfileRow(String title) {
     children: [
       Padding(
         padding: const EdgeInsets.only(top: 14, bottom: 14),
-        child: Text(title, style: const TextStyle(color: Colors.black),),
+        child: Text(
+          title,
+          style: const TextStyle(color: Colors.black),
+        ),
       ),
       const Text('Data'),
       const Divider(),
@@ -227,7 +267,8 @@ Widget buildProfileRow(String title) {
   );
 }
 
-Widget buildProfileEditRow({required String title, required TextEditingController controller}) {
+Widget buildProfileEditRow(
+    {required String title, required TextEditingController controller}) {
   return Column(
     children: [
       Padding(
@@ -235,9 +276,9 @@ Widget buildProfileEditRow({required String title, required TextEditingControlle
         child: TextFormField(
           controller: controller,
           decoration: InputDecoration(
-              labelText: title,
-              hintText: "data",
-              hintStyle: const TextStyle(fontWeight: FontWeight.normal),
+            labelText: title,
+            hintText: "data",
+            hintStyle: const TextStyle(fontWeight: FontWeight.normal),
           ),
         ),
       ),

@@ -9,7 +9,7 @@ class LandingScreen extends StatelessWidget {
   static String id = 'landing_screen';
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kCasal,
       appBar: AppBar(
@@ -28,7 +28,7 @@ class LandingScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
               child: SizedBox(
                 height: 120,
-                width: MediaQuery.of(context).size.width*0.7,
+                width: MediaQuery.of(context).size.width * 0.7,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,21 +45,28 @@ class LandingScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('Hi, Nama', style: TextStyle(fontSize: 26, fontWeight: bold)),
+                            const Text('Hi, Nama',
+                                style:
+                                    TextStyle(fontSize: 26, fontWeight: bold)),
                             const Padding(
-                              padding:EdgeInsets.only(top: 4, bottom: 8, right: 32),
+                              padding:
+                                  EdgeInsets.only(top: 4, bottom: 8, right: 32),
                               child: Text('Nomor Telepon'),
                             ),
                             SizedBox(
                               height: 36,
                               child: TextButton(
-                                style: TextButton.styleFrom(backgroundColor: kGreyishTeal),
+                                style: TextButton.styleFrom(
+                                    backgroundColor: kGreyishTeal),
                                 onPressed: null,
                                 child: const Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text("Role", style: TextStyle(color: Colors.white),)
+                                    Text(
+                                      "Role",
+                                      style: TextStyle(color: Colors.white),
+                                    )
                                   ],
                                 ),
                               ),
@@ -72,7 +79,6 @@ class LandingScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             Column(
               children: [
                 SizedBox(
@@ -89,7 +95,6 @@ class LandingScreen extends StatelessWidget {
                             screenId: PresenceScreen.id,
                           ),
                         ),
-
                         Builder(
                           builder: (context) => functionCard(
                             context,
@@ -103,9 +108,9 @@ class LandingScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 18),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 24, horizontal: 18),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -123,23 +128,22 @@ class LandingScreen extends StatelessWidget {
                                     desc: "Hari Minggu, Jam 8 Pagi",
                                   ),
                                 ),
-
                                 Builder(
                                   builder: (context) => announcementCard(
                                     context,
                                     title: "Donasi Anak Asuh",
-                                    desc: "Donasi anak asuh dapat dilakukan dengan menghubungi maling",
+                                    desc:
+                                        "Donasi anak asuh dapat dilakukan dengan menghubungi maling",
                                   ),
                                 ),
-
                                 Builder(
                                   builder: (context) => announcementCard(
                                     context,
                                     title: "Grup LINE PVVD Sports",
-                                    desc: "PVVD mengadakan olahraga tiap hari sampai mati",
+                                    desc:
+                                        "PVVD mengadakan olahraga tiap hari sampai mati",
                                   ),
                                 ),
-
                                 Builder(
                                   builder: (context) => announcementCard(
                                     context,
@@ -152,8 +156,7 @@ class LandingScreen extends StatelessWidget {
                           ),
                         ),
                       ],
-                    )
-                ),
+                    )),
               ],
             ),
           ],
@@ -163,7 +166,8 @@ class LandingScreen extends StatelessWidget {
   }
 }
 
-Widget functionCard (BuildContext context, {
+Widget functionCard(
+  BuildContext context, {
   required String title,
   required String desc,
   required String screenId,
@@ -202,28 +206,24 @@ Widget functionCard (BuildContext context, {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: titleFontSize
-                            )
-                        ),
+                                fontSize: titleFontSize)),
                         Text(desc,
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: descFontSize
-                            )
-                        ),
+                                color: Colors.black, fontSize: descFontSize)),
                       ],
                     ),
                   ),
-
                   if (icon != null) Icon(icon, size: iconSize),
                 ],
               ),
-
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: TextButton(
-                  style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(kGreyishTeal)),
-                  onPressed: () {Navigator.pushNamed(context, screenId);},
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(kGreyishTeal)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, screenId);
+                  },
                   child: const Text("Tes"),
                 ),
               ),
@@ -235,7 +235,8 @@ Widget functionCard (BuildContext context, {
   );
 }
 
-Widget announcementCard (BuildContext context, {
+Widget announcementCard(
+  BuildContext context, {
   required String title,
   required String desc,
 }) {
@@ -254,7 +255,11 @@ Widget announcementCard (BuildContext context, {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w800)),
+            Text(title,
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800)),
             Text(desc, style: const TextStyle(color: Colors.black)),
             const TextButton(onPressed: null, child: Text("Read More >>"))
           ],

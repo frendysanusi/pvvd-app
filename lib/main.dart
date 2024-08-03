@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:pvvd_app/screens/landing_screen.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/screens/register_screen.dart';
+import 'package:pvvd_app/screens/user_presence_data_screen.dart';
 import 'firebase_options.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         LandingScreen.id: (context) => const LandingScreen(),
         ProfileScreen.id: (context) => const ProfileScreen(),
         PresenceScreen.id: (context) => const PresenceScreen(),
+        UserPresenceDataScreen.id: (context) => const UserPresenceDataScreen(),
       },
     );
   }

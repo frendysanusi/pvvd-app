@@ -17,12 +17,16 @@ TextStyle kBodyMedium = GoogleFonts.montserrat().copyWith(
 TextStyle kBodySemiBold = GoogleFonts.montserrat().copyWith(
   fontWeight: semiBold,
 );
+TextStyle kBodyBold = GoogleFonts.montserrat().copyWith(
+  fontWeight: bold,
+);
 
 /* Color */
 const Color kGunmetal = Color(0xFF253334);
 const Color kCasal = Color(0xFF295D61);
 const Color kGreyishTeal = Color(0xFF7C9A92);
 const Color kFringyFlower = Color(0xFFB7DDC2);
+const Color kShadedSpruce = Color(0xFF00585E);
 const Color kSilverSand = Color(0xFFBEC2C2);
 const Color kDisabledBtn = Color(0xFF1D1B20);
 const Color kWhite = Color(0xFFFFFFFF);
@@ -95,5 +99,22 @@ TextStyle kBS6 = kBodySemiBold.copyWith(
   fontSize: 12,
 );
 TextStyle kBS7 = kBodySemiBold.copyWith(
+  fontSize: 10,
+);
+
+// Body Bold
+TextStyle kBB1 = kBodyBold.copyWith(
+  fontSize: 20,
+);
+TextStyle kBB2 = kBodyBold.copyWith(
+  fontSize: 16,
+);
+TextStyle kBB3 = kBodyBold.copyWith(
+  fontSize: 14,
+);
+TextStyle kBB4 = kBodyBold.copyWith(
+  fontSize: 12,
+);
+TextStyle kBB5 = kBodyBold.copyWith(
   fontSize: 10,
 );
