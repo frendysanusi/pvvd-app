@@ -42,7 +42,7 @@ class Navbar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          label: 'Profil',
+          label: 'Profile',
         ),
       ],
       currentIndex: currentIndex,

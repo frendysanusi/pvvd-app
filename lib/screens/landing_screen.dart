@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/navbar.dart';
+import 'package:pvvd_app/screens/user_presence_data_screen.dart';
+import 'package:pvvd_app/screens/welcome_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/utils/profile.dart';
@@ -13,12 +17,20 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  late Profile profile;
+  late Profile profile = Profile.instance!;
 
   @override
   void initState() {
     super.initState();
+    isLoggedIn();
     fetchProfile();
+  }
+
+  Future<void> isLoggedIn() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+      return;
+    }
   }
 
   Future<void> fetchProfile() async {
@@ -55,11 +67,25 @@ class _LandingScreenState extends State<LandingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset(
-                        'assets/images/profile-placeholder.png',
-                        width: 80,
-                        height: 80,
-                      ),
+                      profile.image != null
+                          ? Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: MemoryImage(
+                                    base64Decode(profile.image!),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : Image.asset(
+                              'assets/images/profile-placeholder.png',
+                              width: 80,
+                              height: 80,
+                            ),
                       Center(
                         child: SizedBox(
                           height: 120,
@@ -115,6 +141,7 @@ class _LandingScreenState extends State<LandingScreen> {
                             title: "Presensi",
                             desc: "Tandai kehadiran Anda di sini",
                             icon: Icons.qr_code_scanner,
+                            buttonText: "Tandai Hadir",
                             screenId: PresenceScreen.id,
                           ),
                         ),
@@ -124,7 +151,8 @@ class _LandingScreenState extends State<LandingScreen> {
                             title: "Riwayat Presensi",
                             desc: "Lihat riwayat kehadiran Anda di sini",
                             icon: Icons.history,
-                            screenId: PresenceScreen.id,
+                            buttonText: "Lihat Presensi",
+                            screenId: UserPresenceDataScreen.id,
                           ),
                         ),
                       ],
@@ -192,6 +220,7 @@ Widget functionCard(
   BuildContext context, {
   required String title,
   required String desc,
+  required String buttonText,
   required String screenId,
   IconData? icon,
 }) {
@@ -246,7 +275,7 @@ Widget functionCard(
                   onPressed: () {
                     Navigator.pushNamed(context, screenId);
                   },
-                  child: const Text("Tes"),
+                  child: Text(buttonText),
                 ),
               ),
             ],

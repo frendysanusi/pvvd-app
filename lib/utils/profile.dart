@@ -5,6 +5,7 @@ class Profile {
   Profile._(
       this.email,
       this.firstname,
+      this.lastname,
       this.nickname,
       this.birthdate,
       this.phone,
@@ -16,13 +17,15 @@ class Profile {
       this.subdistrict,
       this.district,
       this.province,
-      this.role);
+      this.role,
+      this.image);
 
   static Profile? _profileInstance;
 
   factory Profile(
       String email,
       String firstname,
+      String lastname,
       String nickname,
       String birthdate,
       String phone,
@@ -34,10 +37,12 @@ class Profile {
       String subdistrict,
       String district,
       String province,
-      String role) {
+      String role,
+      String? image) {
     _profileInstance = Profile._(
       email,
       firstname,
+      lastname,
       nickname,
       birthdate,
       phone,
@@ -50,12 +55,14 @@ class Profile {
       district,
       province,
       role,
+      image,
     );
     return _profileInstance!;
   }
 
   final String email;
   final String firstname;
+  final String lastname;
   final String nickname;
   final String birthdate; // will be changed to date
   final String phone;
@@ -68,6 +75,7 @@ class Profile {
   final String district;
   final String province;
   final String role;
+  final String? image;
 
   static Future<void> getProfile() async {
     final String userId = FirebaseAuth.instance.currentUser!.uid;
@@ -80,6 +88,7 @@ class Profile {
     Profile(
       FirebaseAuth.instance.currentUser!.email as String,
       data['firstname'] as String,
+      data['lastname'] as String,
       data['nickname'] as String,
       data['birthdate'] as String,
       data['phone'] as String,
@@ -92,6 +101,7 @@ class Profile {
       data['district'] as String,
       data['province'] as String,
       data['role'] as String,
+      data['image'],
     );
   }
 

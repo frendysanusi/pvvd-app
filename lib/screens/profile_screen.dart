@@ -1,11 +1,14 @@
-import 'dart:ui';
-import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
+// import 'dart:ui';
+// import 'package:flutter/services.dart';
+// import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
+// import 'package:flutter/painting.dart';
+// import 'package:flutter/widgets.dart';
 import 'package:pvvd_app/components/navbar.dart';
 import 'package:pvvd_app/utils/constants.dart';
+import 'package:pvvd_app/utils/profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,36 +16,67 @@ class ProfileScreen extends StatefulWidget {
   static String id = 'profile_screen';
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _birthdayController = TextEditingController();
-  final TextEditingController _bloodController = TextEditingController();
-  final TextEditingController _domicileController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _provinceController = TextEditingController();
-  final TextEditingController _instanceController = TextEditingController();
-  final TextEditingController _fieldController = TextEditingController();
-  final TextEditingController _educationController = TextEditingController();
+  late TextEditingController _firstnameController = TextEditingController();
+  late TextEditingController _lastnameController = TextEditingController();
+  late TextEditingController _phoneController = TextEditingController();
+  late TextEditingController _emailController = TextEditingController();
+  late TextEditingController _birthdayController = TextEditingController();
+  late TextEditingController _bloodController = TextEditingController();
+  late TextEditingController _domicileController = TextEditingController();
+  late TextEditingController _districtController = TextEditingController();
+  late TextEditingController _subdistrictController = TextEditingController();
+  late TextEditingController _provinceController = TextEditingController();
+  late TextEditingController _schoolController = TextEditingController();
+  late TextEditingController _majorController = TextEditingController();
+  late TextEditingController _educationController = TextEditingController();
+
+  late Profile profile = Profile.instance!;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstnameController = TextEditingController(text: profile.firstname);
+    _lastnameController = TextEditingController(text: profile.lastname);
+    _phoneController = TextEditingController(text: profile.phone);
+    _emailController = TextEditingController(text: profile.email);
+    _birthdayController = TextEditingController(text: profile.birthdate);
+    _bloodController = TextEditingController(text: profile.bloodtype);
+    _domicileController = TextEditingController(text: profile.domicile);
+    _districtController = TextEditingController(text: profile.district);
+    _subdistrictController = TextEditingController(text: profile.subdistrict);
+    _provinceController = TextEditingController(text: profile.province);
+    _schoolController = TextEditingController(text: profile.school);
+    _majorController = TextEditingController(text: profile.major);
+    _educationController = TextEditingController(text: profile.educationlevel);
+    fetchProfile();
+  }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
     _birthdayController.dispose();
     _bloodController.dispose();
     _domicileController.dispose();
-    _cityController.dispose();
+    _districtController.dispose();
     _provinceController.dispose();
-    _instanceController.dispose();
-    _fieldController.dispose();
+    _schoolController.dispose();
+    _majorController.dispose();
     _educationController.dispose();
     super.dispose();
+  }
+
+  Future<void> fetchProfile() async {
+    await Profile.getProfile();
+    setState(() {
+      profile = Profile.instance!;
+    });
   }
 
   @override
@@ -82,11 +116,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Image.asset(
-                          'assets/images/profile-placeholder.png',
-                          width: 80,
-                          height: 80,
-                        ),
+                        profile.image != null
+                            ? Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: MemoryImage(
+                                      base64Decode(profile.image!),
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              )
+                            : Image.asset(
+                                'assets/images/profile-placeholder.png',
+                                width: 80,
+                                height: 80,
+                              ),
                         Center(
                           child: SizedBox(
                             height: 120,
@@ -94,13 +142,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                const Text('Hi, Nama',
-                                    style: TextStyle(
+                                Text('Hi, ${profile.firstname}',
+                                    style: const TextStyle(
                                         fontSize: 26, fontWeight: bold)),
-                                const Padding(
-                                  padding: EdgeInsets.only(
+                                Padding(
+                                  padding: const EdgeInsets.only(
                                       top: 4, bottom: 8, right: 32),
-                                  child: Text('Nomor Telepon'),
+                                  child: Text(profile.phone),
                                 ),
                                 SizedBox(
                                   height: 36,
@@ -108,15 +156,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: TextButton.styleFrom(
                                         backgroundColor: kGreyishTeal),
                                     onPressed: null,
-                                    child: const Column(
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Role",
-                                          style: TextStyle(color: Colors.white),
+                                          profile.role,
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         )
                                       ],
                                     ),
@@ -144,16 +193,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildProfileRow('Nama Lengkap'),
-                        buildProfileRow('Tanggal Lahir'),
-                        buildProfileRow('Golongan Darah'),
-                        buildProfileRow('Alamat E-mail'),
-                        buildProfileRow('Alamat Domisili'),
-                        buildProfileRow('Kabupaten/Kota'),
-                        buildProfileRow('Provinsi'),
-                        buildProfileRow('Asal Instansi'),
-                        buildProfileRow('Bidang/Jurusan'),
-                        buildProfileRow('Jenjang Pendidikan'),
+                        buildProfileRow('Nama Lengkap',
+                            '${profile.firstname} ${profile.lastname}'),
+                        buildProfileRow('Tanggal Lahir', profile.birthdate),
+                        buildProfileRow('Golongan Darah', profile.bloodtype),
+                        buildProfileRow('Alamat E-mail', profile.email),
+                        buildProfileRow('Alamat Domisili', profile.domicile),
+                        buildProfileRow('Kabupaten/Kota', profile.district),
+                        buildProfileRow('Kecamatan', profile.subdistrict),
+                        buildProfileRow('Provinsi', profile.province),
+                        buildProfileRow('Asal Instansi', profile.school),
+                        buildProfileRow('Bidang/Jurusan', profile.major),
+                        buildProfileRow(
+                            'Jenjang Pendidikan', profile.educationlevel),
                       ],
                     ),
                   ),
@@ -210,8 +262,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               controller:
                                   _phoneController), //Perlu ada tahap verifikasi
                           buildProfileEditRow(
-                              title: 'Nama Lengkap',
-                              controller: _nameController),
+                              title: 'Nama Depan',
+                              controller: _firstnameController),
+                          buildProfileEditRow(
+                              title: 'Nama Belakang',
+                              controller: _lastnameController),
                           buildProfileEditRow(
                               title: 'Tanggal Lahir',
                               controller: _birthdayController),
@@ -226,16 +281,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               controller: _domicileController),
                           buildProfileEditRow(
                               title: 'Kabupaten/Kota',
-                              controller: _cityController),
+                              controller: _districtController),
+                          buildProfileEditRow(
+                              title: 'Kecamatan',
+                              controller: _subdistrictController),
                           buildProfileEditRow(
                               title: 'Provinsi',
                               controller: _provinceController),
                           buildProfileEditRow(
                               title: 'Asal Instansi',
-                              controller: _instanceController),
+                              controller: _schoolController),
                           buildProfileEditRow(
                               title: 'Bidang/Jurusan',
-                              controller: _fieldController),
+                              controller: _majorController),
                           buildProfileEditRow(
                               title: 'Jenjang Pendidikan',
                               controller: _educationController),
@@ -253,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget buildProfileRow(String title) {
+Widget buildProfileRow(String title, String? data) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -264,7 +322,13 @@ Widget buildProfileRow(String title) {
           style: const TextStyle(color: Colors.black),
         ),
       ),
-      const Text('Data'),
+      Text(
+        data ?? '-',
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w300,
+        ),
+      ),
       const Divider(),
     ],
   );
@@ -278,9 +342,9 @@ Widget buildProfileEditRow(
         padding: const EdgeInsets.only(bottom: 12),
         child: TextFormField(
           controller: controller,
+          style: const TextStyle(color: Colors.black),
           decoration: InputDecoration(
             labelText: title,
-            hintText: "data",
             hintStyle: const TextStyle(fontWeight: FontWeight.normal),
           ),
         ),

@@ -40,7 +40,7 @@ class _PresenceScreenState extends State<PresenceScreen> {
         if (date.day == serviceDate.day &&
             date.month == serviceDate.month &&
             date.year == serviceDate.year &&
-            date.hour >= serviceDate.hour &&
+            date.hour >= serviceDate.hour - 1 &&
             date.hour <= serviceDate.hour + 2) {
           dateMatches = true;
           servicesId = doc.id;
