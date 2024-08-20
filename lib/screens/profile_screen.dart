@@ -206,6 +206,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         buildProfileRow('Bidang/Jurusan', profile.major),
                         buildProfileRow(
                             'Jenjang Pendidikan', profile.educationlevel),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: kGreyishTeal,
+                                      minimumSize: Size(MediaQuery.of(context).size.width * 0.9, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                  ),
+                                  child: Text(style: TextStyle(color: Colors.white, fontSize: 18), "LOGOUT"),
+                                ),
+                              ],
+                            ),
+                        ),
                       ],
                     ),
                   ),

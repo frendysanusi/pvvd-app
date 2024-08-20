@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pvvd_app/components/navbar.dart';
@@ -7,6 +8,7 @@ import 'package:pvvd_app/screens/welcome_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/utils/profile.dart';
+import 'package:pvvd_app/utils/announcements.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
@@ -17,13 +19,15 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  late Profile profile = Profile.instance!;
+  Profile? profile = Profile.instance;
+  List<Announcements>? announcements = Announcements.instances;
 
   @override
   void initState() {
-    super.initState();
+    super.  initState();
     isLoggedIn();
     fetchProfile();
+    fetchAnnouncements();
   }
 
   Future<void> isLoggedIn() async {
@@ -40,6 +44,13 @@ class _LandingScreenState extends State<LandingScreen> {
     });
   }
 
+  Future<void> fetchAnnouncements() async {
+    await Announcements.getAnnouncements();
+    setState(() {
+      announcements = Announcements.instances!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,9 +59,6 @@ class _LandingScreenState extends State<LandingScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 70,
-        leading: const BackButton(
-          color: Colors.white,
-        ),
         title: const Text('Profile', style: TextStyle(color: Colors.white)),
       ),
       body: SafeArea(
@@ -59,7 +67,7 @@ class _LandingScreenState extends State<LandingScreen> {
             children: [
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+                const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
                 child: SizedBox(
                   height: 120,
                   width: MediaQuery.of(context).size.width * 0.7,
@@ -67,7 +75,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      profile.image != null
+                      profile?.image != null
                           ? Container(
                               width: 80,
                               height: 80,
@@ -75,7 +83,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                   image: MemoryImage(
-                                    base64Decode(profile.image!),
+                                    base64Decode(profile?.image ?? ''),
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -93,13 +101,13 @@ class _LandingScreenState extends State<LandingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text('Hi, ${profile.firstname}',
+                              Text('Hi, ${profile?.firstname ?? 'User'}',
                                   style: const TextStyle(
                                       fontSize: 26, fontWeight: bold)),
                               Padding(
                                 padding: const EdgeInsets.only(
                                     top: 4, bottom: 8, right: 32),
-                                child: Text(profile.phone),
+                                child: Text(profile?.phone ?? '08123456789'),
                               ),
                               SizedBox(
                                 height: 36,
@@ -113,7 +121,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        profile.role,
+                                        profile?.role ?? 'Guest',
                                         style: const TextStyle(
                                             color: Colors.white),
                                       )
@@ -138,11 +146,21 @@ class _LandingScreenState extends State<LandingScreen> {
                         Builder(
                           builder: (context) => functionCard(
                             context,
-                            title: "Presensi",
+                            title: "Scan QR",
                             desc: "Tandai kehadiran Anda di sini",
                             icon: Icons.qr_code_scanner,
                             buttonText: "Tandai Hadir",
                             screenId: PresenceScreen.id,
+                          ),
+                        ),
+                        Builder(
+                          builder: (context) => functionCard(
+                            context,
+                            title: "Jadwal Kebaktian",
+                            desc: "Lihat Jadwal Kebaktian di sini",
+                            icon: Icons.church,
+                            buttonText: "Lihat Jadwal",
+                            screenId: UserPresenceDataScreen.id,
                           ),
                         ),
                         Builder(
@@ -168,34 +186,17 @@ class _LandingScreenState extends State<LandingScreen> {
                         const Divider(),
                         Column(
                           children: [
-                            Builder(
-                              builder: (context) => announcementCard(
-                                context,
-                                title: "Jadwal Kebaktian",
-                                desc: "Hari Minggu, Jam 8 Pagi",
-                              ),
-                            ),
-                            Builder(
-                              builder: (context) => announcementCard(
-                                context,
-                                title: "Donasi Anak Asuh",
-                                desc:
-                                    "Donasi anak asuh dapat dilakukan dengan menghubungi maling",
-                              ),
-                            ),
-                            Builder(
-                              builder: (context) => announcementCard(
-                                context,
-                                title: "Grup LINE PVVD Sports",
-                                desc:
-                                    "PVVD mengadakan olahraga tiap hari sampai mati",
-                              ),
-                            ),
-                            Builder(
-                              builder: (context) => announcementCard(
-                                context,
-                                title: "Malam Keakraban",
-                                desc: "Paginya ga akrab",
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: (announcements?.length ?? 0) * MediaQuery.of(context).size.height * 0.21,
+                              child: ListView.builder(
+                                  itemCount: announcements?.length ?? 0,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) => announcementCard(
+                                  context,
+                                  title: announcements?[index].title ?? '',
+                                  desc: announcements?[index].desc ?? '',
+                                ),
                               ),
                             ),
                           ],
@@ -224,9 +225,9 @@ Widget functionCard(
   required String screenId,
   IconData? icon,
 }) {
-  double iconSize = MediaQuery.of(context).size.width * 0.2;
-  double titleFontSize = MediaQuery.of(context).size.width * 0.05;
-  double descFontSize = MediaQuery.of(context).size.width * 0.035;
+  final double iconSize = MediaQuery.of(context).size.width * 0.2;
+  final double titleFontSize = MediaQuery.of(context).size.width * 0.05;
+  final double descFontSize = MediaQuery.of(context).size.width * 0.035;
 
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -237,7 +238,7 @@ Widget functionCard(
       ),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.7,
-        height: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.width * 0.45,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           child: Column(
@@ -294,7 +295,7 @@ Widget announcementCard(
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
     child: Container(
-      height: 140,
+      height: 180,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Colors.white,
