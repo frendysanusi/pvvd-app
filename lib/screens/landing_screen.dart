@@ -8,7 +8,9 @@ import 'package:pvvd_app/screens/welcome_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:pvvd_app/screens/presence_screen.dart';
 import 'package:pvvd_app/utils/profile.dart';
+import 'package:pvvd_app/utils/services.dart';
 import 'package:pvvd_app/utils/announcements.dart';
+import 'package:intl/intl.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
@@ -20,6 +22,7 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   Profile? profile = Profile.instance;
+  List<Services>? services = Services.instances;
   List<Announcements>? announcements = Announcements.instances;
 
   @override
@@ -27,6 +30,7 @@ class _LandingScreenState extends State<LandingScreen> {
     super.  initState();
     isLoggedIn();
     fetchProfile();
+    fetchServices();
     fetchAnnouncements();
   }
 
@@ -41,6 +45,13 @@ class _LandingScreenState extends State<LandingScreen> {
     await Profile.getProfile();
     setState(() {
       profile = Profile.instance!;
+    });
+  }
+
+  Future<void> fetchServices() async {
+    await Services.getServices(06, 2024);
+    setState(() {
+      services = Services.instances!;
     });
   }
 
@@ -158,9 +169,9 @@ class _LandingScreenState extends State<LandingScreen> {
                             context,
                             title: "Jadwal Kebaktian",
                             desc: "Lihat Jadwal Kebaktian di sini",
-                            icon: Icons.church,
+                            icon: Icons.date_range,
                             buttonText: "Lihat Jadwal",
-                            screenId: UserPresenceDataScreen.id,
+                            screenId: "scheduleBottomSheet",
                           ),
                         ),
                         Builder(
@@ -182,7 +193,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Announcement"),
+                        const Text("Pengumuman"),
                         const Divider(),
                         Column(
                           children: [
@@ -215,108 +226,215 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
     );
   }
-}
 
-Widget functionCard(
-  BuildContext context, {
-  required String title,
-  required String desc,
-  required String buttonText,
-  required String screenId,
-  IconData? icon,
-}) {
-  final double iconSize = MediaQuery.of(context).size.width * 0.2;
-  final double titleFontSize = MediaQuery.of(context).size.width * 0.05;
-  final double descFontSize = MediaQuery.of(context).size.width * 0.035;
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+  void scheduleBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
       ),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.7,
-        height: MediaQuery.of(context).size.width * 0.45,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: titleFontSize)),
-                        Text(desc,
-                            style: TextStyle(
-                                color: Colors.black, fontSize: descFontSize)),
-                      ],
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return FractionallySizedBox(
+          heightFactor: 0.65,
+          child: Container(
+            height: MediaQuery.of(context).size.height *
+                0.8, // Adjust the height as needed
+            decoration: const BoxDecoration(
+              color: kGreyishTeal,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(25.0),
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(25.0),
+              ),
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                resizeToAvoidBottomInset: true,
+                body: Padding(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+                  child: SafeArea(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Jadwal Kebaktian", style: TextStyle(color: Colors.black),),
+                          
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: (services?.length ?? 0) * MediaQuery.of(context).size.height * 0.21,
+                            child: ListView.builder(
+                              itemCount: services?.length ?? 0,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) => serviceCard(
+                                context,
+                                date: services?[index].date ?? DateTime(2024, 01, 01),
+                                leader: services?[index].leader ?? '',
+                                translator: services?[index].translator ?? '',
+                                speaker: services?[index].speaker ?? '',
+                                topic: services?[index].topic ?? '',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  if (icon != null) Icon(icon, size: iconSize),
-                ],
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: TextButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(kGreyishTeal)),
-                  onPressed: () {
-                    Navigator.pushNamed(context, screenId);
-                  },
-                  child: Text(buttonText),
                 ),
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget functionCard(
+      BuildContext context, {
+        required String title,
+        required String desc,
+        required String buttonText,
+        required String screenId,
+        IconData? icon,
+      }) {
+    final double iconSize = MediaQuery.of(context).size.width * 0.2;
+    final double titleFontSize = MediaQuery.of(context).size.width * 0.05;
+    final double descFontSize = MediaQuery.of(context).size.width * 0.035;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.width * 0.45,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: titleFontSize)),
+                          Text(desc,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: descFontSize)),
+                        ],
+                      ),
+                    ),
+                    if (icon != null) Icon(icon, size: iconSize),
+                  ],
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: TextButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(kGreyishTeal)),
+                    onPressed: () {
+                      if (screenId == "scheduleBottomSheet") {
+                        scheduleBottomSheet(context);
+                      } else {
+                        Navigator.pushNamed(context, screenId);
+                      }
+                    },
+                    child: Text(buttonText),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget serviceCard(
+      BuildContext context, {
+        required DateTime date,
+        required String leader,
+        required String translator,
+        required String speaker,
+        required String topic,
+      }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Container(
+        height: 160,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(topic,
+                  style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w800)),
+              Text(speaker, style: const TextStyle(color: Colors.black)),
+              Text(DateFormat('dd/MM/yyyy').format(date), style: const TextStyle(color: Colors.black)),
+              Text(leader, style: const TextStyle(color: Colors.black)),
+              Text(translator, style: const TextStyle(color: Colors.black)),
+              Divider(),
             ],
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget announcementCard(
-  BuildContext context, {
-  required String title,
-  required String desc,
-}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-    child: Container(
-      height: 180,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w800)),
-            Text(desc, style: const TextStyle(color: Colors.black)),
-            const TextButton(onPressed: null, child: Text("Read More >>"))
-          ],
+  Widget announcementCard(
+      BuildContext context, {
+        required String title,
+        required String desc,
+      }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      child: Container(
+        height: 180,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w800)),
+              Text(desc, style: const TextStyle(color: Colors.black)),
+              const TextButton(onPressed: null, child: Text("Read More >>"))
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
