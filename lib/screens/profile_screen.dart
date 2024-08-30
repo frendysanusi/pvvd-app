@@ -2,13 +2,15 @@
 // import 'package:flutter/services.dart';
 // import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/painting.dart';
 // import 'package:flutter/widgets.dart';
 import 'package:pvvd_app/components/navbar.dart';
+import 'package:pvvd_app/screens/login_screen.dart';
 import 'package:pvvd_app/utils/constants.dart';
 import 'package:pvvd_app/utils/profile.dart';
+import 'package:pvvd_app/auth.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -77,6 +79,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       profile = Profile.instance!;
     });
+  }
+
+  String? errorMessage = '';
+  Future<void> signOut() async {
+    try {
+      await Auth().signOut();
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
   }
 
   @override
@@ -206,6 +219,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         buildProfileRow('Bidang/Jurusan', profile.major),
                         buildProfileRow(
                             'Jenjang Pendidikan', profile.educationlevel),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton(
+                                  onPressed: () async {
+                                    await signOut();
+                                    Navigator.pushNamed(context, LoginScreen.id);
+                                  },
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: kGreyishTeal,
+                                      minimumSize: Size(MediaQuery.of(context).size.width * 0.9, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                  ),
+                                  child: Text(style: TextStyle(color: Colors.white, fontSize: 18), "LOGOUT"),
+                                ),
+                              ],
+                            ),
+                        ),
                       ],
                     ),
                   ),
